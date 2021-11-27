@@ -18,8 +18,42 @@ ARG POWERSHELL_VERSION
 ARG TARGETOS
 ARG TARGETARCH
 
+# What's going on here?
+# - Install curl to download tarball
+# - Translate architecture to match powershell architecture
+# - Download the powershell '.tar.gz' archive
+
+RUN apt-get update -qq && \
+    apt-get install -qq --yes curl && \
+    case ${TARGETARCH} in \
+         "amd64") PWSH_ARCH=x64           ;; \
+         "arm")   PWSH_ARCH=arm32         ;; \
+         *)       PWSH_ARCH=${TARGETARCH} ;; \
+    esac && \
+    curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz
+
+# Create the target folder where powershell will be placed and expand powershell to the target folder
+RUN mkdir -p /opt/microsoft/powershell/7 && \
+    tar -zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
+
+FROM ubuntu:20.04 as final
+
+#LABEL maintainer="My Company Team <email@example.org>"
+
+# Copy only the files we need from the previous stage
+COPY --from=build ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
+
+ENV \
+    # Define ENVs for Localization/Globalization
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    # Set a fixed location for the Module analysis cache.
+    # See: https://github.com/PowerShell/PowerShell-Docker/issues/103
+    PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
+
 # Upgrade packages and cleanup unused dependencies
-RUN apt-get update -qq --yes && \ 
+RUN apt-get update -qq && \ 
     apt-get full-upgrade -qq --yes && \
     apt-get dist-upgrade -qq --yes && \
     apt-get autoremove -qq --yes
@@ -50,8 +84,8 @@ RUN apt-get install -qq --yes curl && \
          "arm")   PWSH_ARCH=arm32         ;; \
          *)       PWSH_ARCH=${TARGETARCH} ;; \
     esac && \
-    curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz && \
-    mkdir -p /opt/microsoft/powershell/7 && \
+    curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz
+RUN mkdir -p /opt/microsoft/powershell/7 && \
     tar -zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 && \
     chmod +x /opt/microsoft/powershell/7/pwsh && \
     ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
