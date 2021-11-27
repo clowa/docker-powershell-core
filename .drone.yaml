@@ -16,7 +16,7 @@ volumes:
 
 services:
   - name: docker
-    image: docker:20.10.8-dind
+    image: docker:20.10.11-dind
     privileged: true
     ports:
       - 2375
@@ -36,7 +36,7 @@ services:
 
 steps:
   - name: docker-healthcheck
-    image: docker:20.10.8
+    image: docker:20.10.11
     environment:
       DOCKER_HOST: "tcp://127.0.0.1:2375"
       DOCKER_TLS_CERTDIR: ""
@@ -62,7 +62,7 @@ steps:
       - docker version
 
   - name: install-qemu
-    image: docker:20.10.8
+    image: docker:20.10.11
     environment:
       DOCKER_HOST: "tcp://127.0.0.1:2375"
       DOCKER_TLS_CERTDIR: ""
@@ -79,7 +79,7 @@ steps:
       DOCKER_HUB_PASSWORD:
         from_secret: docker_hub_password
       DOCKER_IMAGE: clowa/powershell-core
-      PLATFORMS: linux/amd64,linux/arm64/v8
+      PLATFORMS: linux/amd64,linux/arm64/v8,linux/arm/v7
       ORGANIZATION: PowerShell
       REPOSITORY: PowerShell
     resources:
@@ -90,7 +90,7 @@ steps:
       - docker buildx create --use
       - apk add --quiet --no-cache --upgrade jq curl
       - echo "$DOCKER_HUB_PASSWORD" | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
-      - ./scripts/buildx.sh -l || exit 1
+      - ./scripts/buildx.sh -s || exit 1
 
   - name: notification
     image: appleboy/drone-telegram
