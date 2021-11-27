@@ -1,0 +1,61 @@
+# This Dockerfile is not intended for general use, but is rather used to
+# package up official Terraform releases (from releases.hashicorp.com) to
+# release on Dockerhub as the "light" release images.
+#
+# The main Dockerfile in the root of the repository is more generally-useful,
+# since it is able to build a docker image of the current state of the work
+# tree, without any dependency on there being an existing release on
+# releases.hashicorp.com.
+
+# This is intended to be run from the hooks/build script, which sets this
+# appropriately based on git tags.
+
+FROM ubuntu:18.04 as final
+
+#LABEL maintainer="My Company Team <email@example.org>"
+#LABEL "com.hashicorp.terraform.version"="${POWERSHELL_VERSION}"
+ARG POWERSHELL_VERSION
+ARG TARGETOS
+ARG TARGETARCH
+
+# Upgrade packages and cleanup unused dependencies
+RUN apt-get update -qq --yes && \ 
+    apt-get full-upgrade -qq --yes && \
+    apt-get dist-upgrade -qq --yes && \
+    apt-get autoremove -qq --yes
+
+# Install the requirements of powershell / .NET
+RUN apt-get install -qq --yes \
+        libc6 \
+        libgcc1 \
+        libgssapi-krb5-2 \
+        liblttng-ust0 \
+        libstdc++6 \
+        libcurl3 \
+        libunwind8 \
+        libuuid1 \
+        zlib1g \
+        libssl1.0.0 \
+        libicu60
+
+# What's going on here?
+# - Install curl to download tarball
+# - Translate amd64 to x64 to match powershell architecture
+# - Download the powershell '.tar.gz' archive
+# - Create the target folder where powershell will be placed
+# - Expand powershell to the target folder
+# - Set execute permissions
+# - Create the symbolic link that points to powershell binary
+
+RUN apt-get install -qq --yes curl && \
+    case ${TARGETARCH} in \
+         "amd64") PWSH_ARCH=x64           ;; \
+         *)       PWSH_ARCH=${TARGETARCH} ;; \
+    esac && \
+    curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz && \
+    mkdir -p /opt/microsoft/powershell/7 && \
+    tar -zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 && \
+    chmod +x /opt/microsoft/powershell/7/pwsh && \
+    ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+
+ENTRYPOINT ["/usr/bin/pwsh"]
