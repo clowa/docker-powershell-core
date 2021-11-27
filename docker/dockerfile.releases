@@ -10,7 +10,7 @@
 # This is intended to be run from the hooks/build script, which sets this
 # appropriately based on git tags.
 
-FROM ubuntu:18.04 as final
+FROM ubuntu:20.04 as final
 
 #LABEL maintainer="My Company Team <email@example.org>"
 #LABEL "com.hashicorp.terraform.version"="${POWERSHELL_VERSION}"
@@ -29,14 +29,11 @@ RUN apt-get install -qq --yes \
         libc6 \
         libgcc1 \
         libgssapi-krb5-2 \
-        liblttng-ust0 \
+        libicu66 \
+        libssl1.1 \
         libstdc++6 \
-        libcurl3 \
-        libunwind8 \
-        libuuid1 \
         zlib1g \
-        libssl1.0.0 \
-        libicu60
+        libgdiplus
 
 # What's going on here?
 # - Install curl to download tarball
