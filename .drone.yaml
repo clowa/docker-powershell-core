@@ -90,7 +90,7 @@ steps:
       - docker buildx create --use
       - apk add --quiet --no-cache --upgrade jq curl
       - echo "$DOCKER_HUB_PASSWORD" | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
-      - ./scripts/buildx.sh -s || exit 1
+      - ./scripts/buildx.sh -l || exit 1
 
   - name: notification
     image: appleboy/drone-telegram
