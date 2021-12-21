@@ -140,3 +140,8 @@ name: telegram_api_token
 get:
   path: drone-pipeline-telegram-secret
   name: telegram-token
+---
+kind: signature
+hmac: a2b7478928208ac97bb5f19ab40c60b791b26994fba91d55cac72d7ed992bae2
+
+...
