@@ -16,6 +16,7 @@ ARG TARGETARCH
 
 RUN apt-get update -qq && \
     apt-get install -qq --yes curl && \
+    rm -rf /var/lib/apt/lists/* && \
     case ${TARGETARCH} in \
          "amd64") PWSH_ARCH=x64           ;; \
          "arm")   PWSH_ARCH=arm32         ;; \
@@ -35,11 +36,15 @@ FROM ubuntu:20.04 as final
 RUN apt-get update -qq && \ 
     apt-get full-upgrade -qq --yes && \
     apt-get dist-upgrade -qq --yes && \
-    apt-get autoremove -qq --yes
+    apt-get autoremove -qq --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 
-RUN apt-get install -qq --yes locales && \
-    locale-gen en_US.UTF-8
+RUN apt-get update -qq && \
+    apt-get install -qq --yes locales && \
+    rm -rf /var/lib/apt/lists/* && \
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
     
 ENV \
     # Define ENVs for Localization/Globalization
@@ -49,10 +54,13 @@ ENV \
     PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
 
 # Install additional CA certs.
-RUN apt-get install -qq --yes ca-certificates
+RUN apt-get update -qq && \
+    apt-get install -qq --yes ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the requirements of powershell / .NET
-RUN apt-get install -qq --yes --no-install-recommends \
+RUN apt-get update -qq && \
+    apt-get install -qq --yes --no-install-recommends \
         less \
         libc6 \
         libgcc1 \
@@ -61,7 +69,8 @@ RUN apt-get install -qq --yes --no-install-recommends \
         libssl1.1 \
         libstdc++6 \
         zlib1g \
-        libgdiplus
+        libgdiplus && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy only the files we need from the previous stage
 COPY --from=build ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
