@@ -31,23 +31,25 @@ FROM ubuntu:20.04 as final
 
 #LABEL maintainer="My Company Team <email@example.org>"
 
-# Copy only the files we need from the previous stage
-COPY --from=build ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
-
-ENV \
-    # Define ENVs for Localization/Globalization
-    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    # Set a fixed location for the Module analysis cache.
-    # See: https://github.com/PowerShell/PowerShell-Docker/issues/103
-    PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
-
 # Upgrade packages and cleanup unused dependencies
 RUN apt-get update -qq && \ 
     apt-get full-upgrade -qq --yes && \
     apt-get dist-upgrade -qq --yes && \
     apt-get autoremove -qq --yes
+
+
+RUN apt-get install -qq --yes locales && \
+    locale-gen en_US.UTF-8
+    
+ENV \
+    # Define ENVs for Localization/Globalization
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+    # Set a fixed location for the Module analysis cache.
+    # See: https://github.com/PowerShell/PowerShell-Docker/issues/103
+    PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
+
+# Install additional CA certs.
+RUN apt-get install -qq --yes ca-certificates
 
 # Install the requirements of powershell / .NET
 RUN apt-get install -qq --yes --no-install-recommends \
@@ -61,9 +63,16 @@ RUN apt-get install -qq --yes --no-install-recommends \
         zlib1g \
         libgdiplus
 
+# Copy only the files we need from the previous stage
+COPY --from=build ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
+
 # Give all user execute permissions and remove write permissions for others
 RUN chmod a+x,o-w /opt/microsoft/powershell/7/pwsh && \
     # Create the pwsh symbolic link that points to powershell
     ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
-ENTRYPOINT ["/usr/bin/pwsh"]
+# Setup powershell package repositories.
+RUN /usr/bin/pwsh -c "Register-PSRepository -Default"
+RUN /usr/bin/pwsh -c "Register-PackageSource -Name Nuget -Location http://www.nuget.org/api/v2 –ProviderName Nuget | Out-Null"
+
+CMD ["/usr/bin/pwsh"]
