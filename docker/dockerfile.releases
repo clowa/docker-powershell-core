@@ -5,6 +5,7 @@
 FROM --platform=$BUILDPLATFORM ubuntu:20.04 as build
 
 ARG POWERSHELL_VERSION
+ARG DEBIAN_FRONTEND noninteractive
 ARG BUILDPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
@@ -28,8 +29,12 @@ RUN apt-get update -qq && \
 RUN mkdir -p /opt/microsoft/powershell/7 && \
     tar -zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
 
+###########
+## Final ##
+###########
 FROM ubuntu:20.04 as final
 
+ARG DEBIAN_FRONTEND noninteractive
 #LABEL maintainer="My Company Team <email@example.org>"
 
 # Upgrade packages and cleanup unused dependencies
