@@ -95,6 +95,7 @@ steps:
 
   - name: notification
     image: appleboy/drone-telegram
+    failure: ignore
     settings:
       to:
         from_secret: telegram_user_id
@@ -143,6 +144,6 @@ get:
   name: telegram-token
 ---
 kind: signature
-hmac: 736d77fac88cabd97635d72faa747fcb2d5067744c129c1f8ee201f80061e3d4
+hmac: ad558ab3f3909fe89fde8ccc0cbafca70dc136fea51af2cfb18087f939d9416f
 
 ...
