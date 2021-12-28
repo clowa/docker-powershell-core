@@ -21,5 +21,5 @@ Supported platforms:
 Fire this command to setup the cron schedule.
 
 ```bash
-drone cron add "clowa/docker-powershell-core" "nightly" "0 0 1 * * *"
+drone cron add "clowa/docker-powershell-core" "nightly" "0 0 0 * * *"
 ```
