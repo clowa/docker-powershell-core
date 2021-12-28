@@ -86,7 +86,5 @@ RUN chmod a+x,o-w /opt/microsoft/powershell/7/pwsh && \
     ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
 # Setup powershell package repositories.
-RUN /usr/bin/pwsh -c "Register-PSRepository -Default"
-RUN /usr/bin/pwsh -c "Register-PackageSource -Name Nuget -Location http://www.nuget.org/api/v2 –ProviderName Nuget | Out-Null"
 
 CMD ["/usr/bin/pwsh"]
