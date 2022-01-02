@@ -81,7 +81,7 @@ steps:
       DOCKER_HUB_PASSWORD:
         from_secret: docker_hub_password
       DOCKER_IMAGE: clowa/powershell-core
-      PLATFORMS: linux/amd64,linux/arm64/v8,linux/arm/v7
+      PLATFORMS: linux/amd64,linux/arm64,linux/arm/v7
       ORGANIZATION: PowerShell
       REPOSITORY: PowerShell
     resources:
@@ -146,5 +146,3 @@ get:
 ---
 kind: signature
 hmac: 96f4e968f773ab817a53ce3875d37fc685a7dcafe370bba2a24aae27d416d621
-
-...
