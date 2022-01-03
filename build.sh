@@ -103,7 +103,7 @@ do
 
     docker buildx build \
       --push \
-      --file ./docker/dockerfile.releases \
+      --file ./dockerfile \
       --build-arg POWERSHELL_VERSION=${VERSION} \
       --platform ${PLATFORMS} \
       ${TAG_ARGS} \
