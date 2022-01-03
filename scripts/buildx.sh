@@ -27,6 +27,17 @@ function invertArray() {
   echo "${tmpArray[@]}"
 }
 
+function buildTagArgs() {
+  local tags=("$@")
+  local tagArgs=()
+  
+  ## Iterate over each item of the array
+  for t in "${tags[@]}"; do
+    tagArgs+=("--tag ${DOCKER_IMAGE}:${t}")
+  done
+  echo "${tagArgs[@]}"
+}
+
 if [[ -z ${DOCKER_IMAGE+set} ]]; then
   echo "Environment variable DOCKER_IMAGE not set. Run \"export DOCKER_IMAGE=containous/whoami\""
   exit 2
@@ -75,16 +86,26 @@ INVERTED_VERSIONS=($(invertArray ${VERSIONS[@]}))
 
 for VERSION in "${INVERTED_VERSIONS[@]}"
 do
+    TAGS=($VERSION)
+    
+    if [[ $LATEST ]]; then
+      TAGS+=("latest")
+    fi
+
+    TAG_ARGS=$(buildTagArgs ${TAGS[@]})
+
     echo "Build Info:"
     echo "  VERSION: ${VERSION}"
     echo "  Platforms: ${PLATFORMS}"
-    echo "  Tag: $DOCKER_IMAGE:${VERSION}"
+    for t in "${TAGS[@]}"; do
+      echo "  Tag: $DOCKER_IMAGE:${t}"
+    done
 
     docker buildx build \
       --push \
       --file ./docker/dockerfile.releases \
       --build-arg POWERSHELL_VERSION=${VERSION} \
       --platform ${PLATFORMS} \
-      --tag $DOCKER_IMAGE:${VERSION} \
+      ${TAG_ARGS} \
       .
 done
