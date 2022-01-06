@@ -63,14 +63,6 @@ steps:
         done
       - docker version
 
-  - name: install-qemu
-    image: docker:20-dind
-    environment:
-      DOCKER_HOST: "tcp://127.0.0.1:2375"
-      DOCKER_TLS_CERTDIR: ""
-    commands:
-      - docker run --privileged --rm tonistiigi/binfmt --install all
-
   - name: docker-build
     image: crazymax/docker
     environment:
@@ -145,6 +137,6 @@ get:
   name: telegram-token
 ---
 kind: signature
-hmac: 208d84ea68b6460daea7fcd71c6753343953c7f5e2746d5b46bf228bc74e1e01
+hmac: f2b4c7f14a6b9a1c954b186bf0b822f9dd9dc3e407286617554298d16bc219fd
 
 ...
