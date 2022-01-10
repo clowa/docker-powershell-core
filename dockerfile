@@ -19,6 +19,7 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
     TZ=${TZ}; \
     apt-get update -qq && \
     apt-get install -qq --yes curl && \
+    apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/* && \
     case ${TARGETARCH} in \
          "amd64") PWSH_ARCH=x64           ;; \
@@ -48,6 +49,7 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
     apt-get full-upgrade -qq --yes && \
     apt-get dist-upgrade -qq --yes && \
     apt-get autoremove -qq --yes && \
+    apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -55,6 +57,7 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
     TZ=${TZ}; \
     apt-get update -qq && \
     apt-get install -qq --yes locales && \
+    apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/* && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
@@ -71,6 +74,7 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
     TZ=${TZ}; \
     apt-get update -qq && \
     apt-get install -qq --yes ca-certificates && \
+    apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/*
 
 # Install the requirements of powershell / .NET
@@ -87,6 +91,7 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
         libstdc++6 \
         zlib1g \
         libgdiplus && \
+    apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy only the files we need from the previous stage
