@@ -98,6 +98,6 @@ RUN chmod a+x,o-w /opt/microsoft/powershell/7/pwsh && \
     ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
 # Set default shell of RUN command to powershell
-SHELL ["powershell", "-command"]
+SHELL ["pwsh", "-command"]
 
 CMD ["/usr/bin/pwsh"]
