@@ -1,8 +1,6 @@
 name: Build docker images
 on:
   push:
-    branches:
-      - pipeline/github-action
     paths:
       - "release-versions/*"
 jobs:
