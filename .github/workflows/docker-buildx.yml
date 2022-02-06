@@ -1,6 +1,8 @@
 name: docker buildx
 on:
   push:
+    branches:
+      - pipeline/github-action
     paths:
       - "release-versions/*"
 jobs:
