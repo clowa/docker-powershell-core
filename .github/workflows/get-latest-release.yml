@@ -20,7 +20,7 @@ jobs:
           release_url: https://api.github.com/repos/powershell/powershell/releases/latest
         run: |
           curl -sL ${{ env.release_url }} | \
-          jq -r ".tag_name" > release-versions/latest.txt
+          jq -r ".tag_name" > version.txt
 
       - name: Check for modified files
         id: git-check
@@ -30,6 +30,5 @@ jobs:
         if: steps.git-check.outputs.modified == 'true'
         run: |
           git config --global user.name 'GitHub Action'
-          git config --global user.email 'your-email@users.noreply.github.com'
           git commit -am "Update release version"
           git push

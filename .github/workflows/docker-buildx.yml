@@ -2,7 +2,7 @@ name: Build docker images
 on:
   push:
     paths:
-      - "release-versions/*"
+      - "version.txt"
 jobs:
   buildx:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
 
       - name: Get version
         id: pwsh_version
-        run: echo ::set-output name=version::$(cat release-versions/latest.txt | tr -d 'v')
+        run: echo ::set-output name=version::$(cat version.txt | tr -d 'v')
 
       - name: Powershell version
         run: echo ${{ steps.pwsh_version.outputs.version }}
