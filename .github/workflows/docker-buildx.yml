@@ -1,4 +1,4 @@
-name: docker buildx
+name: Build docker images
 on:
   push:
     branches:
@@ -14,7 +14,10 @@ jobs:
 
       - name: Get version
         id: pwsh_version
-        run: cat release-versions/latest.txt
+        run: echo ::set-output name=version::$(cat release-versions/latest.txt | tr -d 'v')
+
+      - name: Powershell version
+        run: echo ${{ steps.pwsh_version.outputs.version }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -46,11 +49,10 @@ jobs:
             linux/amd64
             linux/arm64
             linux/arm/v7
-          build-args: |
-            POWERSHELL_VERSION=${{ steps.pwsh_version.outputs }}
+          build-args: POWERSHELL_VERSION=${{ steps.pwsh_version.outputs.version }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/powershell-core:latest
-            ${{ secrets.DOCKER_USERNAME }}/powershell-core:${{ steps.pwsh_version.outputs }}
+            ${{ secrets.DOCKER_USERNAME }}/powershell-core:${{ steps.pwsh_version.outputs.version }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
