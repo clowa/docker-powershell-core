@@ -19,5 +19,5 @@ Supported platforms:
 
 # CI setups
 
-1. checks every day if a new release is available at the [powershell repository](https://github.com/powershell/powershell)
+1. checks every day at `12:00 am / midnight UTC` if a new release is available at the [powershell repository](https://github.com/powershell/powershell)
 2. Build new docker images with the new release.
