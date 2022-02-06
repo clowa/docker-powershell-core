@@ -1,6 +1,8 @@
 name: Build docker images
 on:
   push:
+    branches:
+      - "master"
     paths:
       - "version.txt"
 jobs:
@@ -52,5 +54,18 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/powershell-core:latest
             ${{ secrets.DOCKER_USERNAME }}/powershell-core:${{ steps.pwsh_version.outputs.version }}
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Send telegram notification
+        uses: appleboy/telegram-action@v0.1.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🖊 ${{ github.actor }} created commit:
+            📩 Commit message: ${{ github.event.commits[0].message }}  
+
+            🔧 Build status:  ${{ steps.docker_build.outcome }}
+
+            📚 Repository: ${{ github.repository }}
+            📦 Image digest: ${{ steps.docker_build.outputs.digest }}
+
+            🐳 See new image on [Docker hub](https://hub.docker.com/r/${{ secrets.DOCKER_USERNAME }}/powershell-core/tags)
