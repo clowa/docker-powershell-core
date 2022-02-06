@@ -1,0 +1,43 @@
+name: Get latest release version
+on:
+  schedule:
+    - cron: "0 10 * * *"
+
+jobs:
+  get-release-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send telegram notification
+        uses: appleboy/telegram-action@v0.1.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            ⚙️ Checking if new release is available.
+            📚 Repository: ${{ github.repository }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch release version
+        id: pwsh_version
+        env:
+          release_url: https://api.github.com/repos/powershell/powershell/releases/latest
+        run: |
+          curl -sL ${{ env.release_url }} | \
+          jq -r ".tag_name" > version.txt
+          echo ::set-output name=version::$(cat version.txt | tr -d 'v')
+
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$([ -z "`git status --porcelain`" ] && echo "false" || echo "true")
+
+      - name: Commit latest release version
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name 'GitHub Action'
+          git commit -am "Update release version to ${{ steps.pwsh_version.outputs.version }}"
+          git push
