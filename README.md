@@ -1,4 +1,5 @@
-[![Build Status](https://ci.k8s.clowa.de/api/badges/clowa/docker-powershell-core/status.svg)](https://ci.k8s.clowa.de/clowa/docker-powershell-core)
+![Get latest release version](https://github.com/clowa/docker-powershell-core/actions/workflows/get-latest-release.yml/badge.svg)
+![Build docker images](https://github.com/clowa/docker-powershell-core/actions/workflows/docker-buildx.yml/badge.svg)
 
 # Overview
 
@@ -16,10 +17,7 @@ Supported platforms:
 - [Dependencies](https://docs.microsoft.com/de-de/dotnet/core/install/linux-ubuntu#dependencies)
 - [Powershell Core repository](https://github.com/PowerShell/PowerShell)
 
-# CI setups for Drone
+# CI setups
 
-Fire this command to setup the cron schedule.
-
-```bash
-drone cron add "clowa/docker-powershell-core" "nightly" "0 0 0 * * *"
-```
+1. checks every day if a new release is available at the [powershell repository](https://github.com/powershell/powershell)
+2. Build new docker images with the new release.
