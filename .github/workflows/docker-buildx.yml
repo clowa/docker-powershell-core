@@ -1,5 +1,8 @@
 name: Build docker images
 on:
+  repository_dispatch:
+    types:
+      - base-image-update
   push:
     paths:
       - "version.txt"

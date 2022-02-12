@@ -1,0 +1,43 @@
+name: Check base image update
+on:
+  schedule:
+    - cron: "0 1 * * *"
+
+env:
+  image: clowa/powershell-core:latest
+  base-image: library/ubuntu:20.04
+
+jobs:
+  check-base-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check if update available
+        id: check
+        uses: lucacome/docker-image-update-checker@v1
+        with:
+          base-image: ${{ env.base-image }}
+          image: ${{ env.image }}
+
+      - if: steps.check.outputs.needs-updating == 'true'
+        name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          event-type: base-image-update
+          # Have to use custom PAT, because commits created with GITHUB_TOKEN will not trigger CI
+          # See: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+
+      - if: steps.check.outputs.needs-updating == 'true'
+        name: Send telegram notification
+        uses: appleboy/telegram-action@v0.1.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            🐳 Base image ${{ env.base-image }} of ${{ env.image }} has been updated.
+            ⚙️ Image rebuild is triggered.
+            📚 Repository: ${{ github.repository }}
