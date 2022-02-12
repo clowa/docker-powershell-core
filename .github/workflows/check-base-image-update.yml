@@ -40,4 +40,4 @@ jobs:
           message: |
             🐳 Base image ${{ env.base-image }} of ${{ env.image }} has been updated.
             ⚙️ Image rebuild is triggered.
-            📚 Repository: ${{ github.repository }}
+            📚 Repository: [ ${{ github.repository }} ](https://github.com/${{ github.repository }})
