@@ -114,12 +114,12 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
 COPY --from=downloader ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
 
 # Give all user execute permissions and remove write permissions for others
-RUN chmod a+x,o-w /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh
-# Create the pwsh symbolic link that points to powershell
-RUN ln -s /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh /usr/bin/pwsh
-# Intialize powershell module cache
-# and disable telemetry
-RUN export POWERSHELL_TELEMETRY_OPTOUT=1 && \
+RUN chmod a+x,o-w /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh && \
+    # Create the pwsh symbolic link that points to powershell
+    ln -s /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh /usr/bin/pwsh && \
+    # Intialize powershell module cache
+    # and disable telemetry
+    export POWERSHELL_TELEMETRY_OPTOUT=1; \
     pwsh \
         -NoLogo \
         -NoProfile \
