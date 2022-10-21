@@ -17,8 +17,8 @@ jobs:
       - name: Get version
         id: pwsh_version
         run: |
-          echo ::set-output name=version::$(cat version.txt | tr -d 'v')
-          echo ::set-output name=install_version::$(cat version.txt | tr -d 'v' | cut -d '.' -f 1)
+          echo "version=$(cat version.txt | tr -d 'v')" >> $GITHUB_OUTPUT
+          echo "install_version=$(cat version.txt | tr -d 'v' | cut -d '.' -f 1)" >> $GITHUB_OUTPUT
 
       - name: Powershell version
         run: echo ${{ steps.pwsh_version.outputs.version }}
