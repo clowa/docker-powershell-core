@@ -10,7 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ################
 ## Downloader ##
 ################
-FROM --platform=$BUILDPLATFORM ubuntu:20.04 as downloader
+FROM --platform=$BUILDPLATFORM ubuntu:22.04 as downloader
 
 ARG PWSH_VERSION
 ARG TARGETOS
@@ -44,7 +44,7 @@ RUN mkdir -p ${POWERSHELL_INSTALL_FOLDER} && \
 ###########
 ## Final ##
 ###########
-FROM ubuntu:20.04 as final
+FROM ubuntu:22.04 as final
 
 LABEL maintainer="Cedric Ahlers <service.clowa@gmail.com>"
 
@@ -96,11 +96,13 @@ RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
         gss-ntlmssp \
         libc6 \
         libgcc1 \
+        libgcc-s1 \
         libgssapi-krb5-2 \
-        libicu66 \
-        libssl1.1 \
-        liblttng-ust0 \
+        libicu70 \
+        liblttng-ust1 \
+        libssl3 \
         libstdc++6 \
+        libunwind8 \
         zlib1g \
     # PowerShell remoting over SSH dependencies
         openssh-client \
