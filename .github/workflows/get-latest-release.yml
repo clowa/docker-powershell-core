@@ -41,5 +41,6 @@ jobs:
         if: steps.git-check.outputs.modified == 'true'
         run: |
           git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
           git commit -am "Update release version to ${{ steps.pwsh_version.outputs.version }}"
           git push
