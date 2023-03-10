@@ -16,7 +16,8 @@ jobs:
 
       - name: Check if update available
         id: check
-        uses: lucacome/docker-image-update-checker@v1.2.1
+        uses: clowa/docker-image-update-checker@342608bb9829d85eeeeb292e78115184b5a6657d
+        # Switch back to official lucacome/docker-image-update-checker after PR is merged
         with:
           base-image: ${{ env.base-image }}
           image: ${{ env.image }}
