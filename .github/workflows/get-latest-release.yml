@@ -29,10 +29,14 @@ jobs:
         env:
           release_url: https://api.github.com/repos/powershell/powershell/releases/latest
         run: |
-          curl -sL ${{ env.release_url }} | \
-          jq -r ".tag_name" > version.txt
-          echo "version=$(cat version.txt | tr -d 'v')" >> $GITHUB_OUTPUT
-
+          VERSION=$(curl -sL "https://api.github.com/repos/powershell/powershell/releases/latest" | jq -r ".tag_name")
+          if [ $VERSION != "null" ]; then
+            echo $VERSION > version.txt
+            echo "version=$($VERSION | tr -d 'v')" >> $GITHUB_OUTPUT
+          else 
+            echo "::error::Value of latest release is  \"null\""
+            exit 1
+          fi
       - name: Check for modified files
         id: git-check
         run: echo "modified=$([ -z "`git status --porcelain`" ] && echo "false" || echo "true")" >> $GITHUB_OUTPUT
