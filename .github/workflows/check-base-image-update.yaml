@@ -27,7 +27,7 @@ jobs:
 
       - if: steps.check.outputs.needs-updating == 'true'
         name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           event-type: base-image-update
           # Have to use custom PAT, because commits created with GITHUB_TOKEN will not trigger CI
