@@ -5,6 +5,8 @@ on:
     types:
       - base-image-update
   push:
+    branches:
+      - main
     paths:
       - "version.txt"
       - "dockerfile"
