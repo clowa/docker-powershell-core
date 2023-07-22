@@ -6,7 +6,6 @@ on:
       - base-image-update
   push:
     paths:
-      - ".github/workflows/docker-*"
       - "version.txt"
       - "dockerfile"
   pull_request:
