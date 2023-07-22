@@ -1,6 +1,6 @@
-[![Get latest release version](https://github.com/clowa/docker-powershell-core/actions/workflows/get-latest-release.yml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/get-latest-release.yml)
-[![Build docker images](https://github.com/clowa/docker-powershell-core/actions/workflows/docker-buildx.yml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/docker-buildx.yml)
-[![Check base image update](https://github.com/clowa/docker-powershell-core/actions/workflows/check-base-image-update.yml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/check-base-image-update.yml)
+[![Get latest release version](https://github.com/clowa/docker-powershell-core/actions/workflows/get-latest-release.yaml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/get-latest-release.yaml)
+[![Build docker images](https://github.com/clowa/docker-powershell-core/actions/workflows/docker-buildx.yaml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/docker-buildx.yaml)
+[![Check base image update](https://github.com/clowa/docker-powershell-core/actions/workflows/check-base-image-update.yaml/badge.svg)](https://github.com/clowa/docker-powershell-core/actions/workflows/check-base-image-update.yaml)
 
 # Overview
 
