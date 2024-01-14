@@ -4,9 +4,6 @@
 
 ARG PWSH_INSTALL_VERSION
 
-ARG TZ=Europe/Berlin
-ARG DEBIAN_FRONTEND=noninteractive
-
 ################
 ## Downloader ##
 ################
@@ -16,14 +13,15 @@ ARG PWSH_VERSION
 ARG TARGETOS
 ARG TARGETARCH
 
+ENV TZ=Europe/Berlin
+ENV DEBIAN_FRONTEND=noninteractive
+
 # What's going on here?
 # - Install curl to download tarball
 # - Translate architecture to match powershell architecture
 # - Download the powershell '.tar.gz' archive
 
-RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
-    TZ=${TZ}; \
-    apt-get update -qq && \
+RUN apt-get update -qq && \
     apt-get install -qq --yes curl && \
     apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/* && \
@@ -46,12 +44,13 @@ RUN mkdir -p ${POWERSHELL_INSTALL_FOLDER} && \
 ###########
 FROM ubuntu:22.04 as final
 
+ENV TZ=Europe/Berlin
+ENV DEBIAN_FRONTEND=noninteractive
+
 LABEL maintainer="Cedric Ahlers <service.clowa@gmail.com>"
 
-# Upgrade packages and cleanup unused dependencies
-RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
-    TZ=${TZ}; \
-    apt-get update -qq && \ 
+# Upgrade packages and cleanup unused dependencies 
+RUN apt-get update -qq && \ 
     apt-get full-upgrade -qq --yes && \
     apt-get dist-upgrade -qq --yes && \
     apt-get autoremove -qq --yes && \
@@ -68,26 +67,20 @@ ENV \
     PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
 
 # Set locale to en_US.UTF-8
-RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
-    TZ=${TZ}; \
-    apt-get update -qq && \
+RUN apt-get update -qq && \
     apt-get install -qq --yes locales && \
     apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/* && \
     locale-gen ${LANG} && update-locale
 
 # Install additional CA certs.
-RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
-    TZ=${TZ}; \
-    apt-get update -qq && \
+RUN apt-get update -qq && \
     apt-get install -qq --yes ca-certificates && \
     apt-get clean -qq --yes && \
     rm -rf /var/lib/apt/lists/*
 
 # Install the requirements of powershell / .NET
-RUN DEBIAN_FRONTEND=${DEBIAN_FRONTEND}; \
-    TZ=${TZ}; \
-    apt-get update -qq && \
+RUN apt-get update -qq && \
     apt-get install -qq --yes --no-install-recommends \
     # less is required for help in powershell
         less \
