@@ -24,11 +24,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && \
     apt-get install -qq --yes curl && \
     apt-get clean -qq --yes && \
-    rm -rf /var/lib/apt/lists/* && \
-    case ${TARGETARCH} in \
-         "amd64") PWSH_ARCH=x64           ;; \
-         "arm")   PWSH_ARCH=arm32         ;; \
-         *)       PWSH_ARCH=${TARGETARCH} ;; \
+    rm -rf /var/lib/apt/lists/*
+
+RUN case ${TARGETARCH} in \
+        "amd64") PWSH_ARCH=x64           ;; \
+        "arm")   PWSH_ARCH=arm32         ;; \
+        *)       PWSH_ARCH=${TARGETARCH} ;; \
     esac && \
     curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz
 
