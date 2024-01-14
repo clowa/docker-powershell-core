@@ -32,7 +32,7 @@ jobs:
           VERSION=$(curl -sL "https://api.github.com/repos/powershell/powershell/releases/latest" | jq -r ".tag_name")
           if [ $VERSION != "null" ]; then
             echo $VERSION > version.txt
-            echo "version=$($VERSION | tr -d 'v')" >> $GITHUB_OUTPUT
+            echo "version=$(echo $VERSION | tr -d 'v')" >> $GITHUB_OUTPUT
           else 
             echo "::error::Value of latest release is  \"null\""
             exit 1
