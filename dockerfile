@@ -2,7 +2,7 @@
 # It uses the GitHub releases of powershell core to install powershell
 # from tarball.
 
-ARG PWSH_INSTALL_VERSION
+ARG MAJOR_VERSION
 
 ################
 ## Downloader ##
@@ -27,14 +27,14 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 RUN case ${TARGETARCH} in \
-        "amd64") PWSH_ARCH=x64           ;; \
-        "arm")   PWSH_ARCH=arm32         ;; \
-        *)       PWSH_ARCH=${TARGETARCH} ;; \
+         "amd64") PWSH_ARCH=x64           ;; \
+         "arm")   PWSH_ARCH=arm32         ;; \
+         *)       PWSH_ARCH=${TARGETARCH} ;; \
     esac && \
     curl --silent --location --output /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-${TARGETOS}-${PWSH_ARCH}.tar.gz
 
 # define the folder we will be installing PowerShell to
-ENV POWERSHELL_INSTALL_FOLDER=/opt/microsoft/powershell/${PWSH_INSTALL_VERSION}
+ENV POWERSHELL_INSTALL_FOLDER=/opt/microsoft/powershell/${MAJOR_VERSION}
 
 # Create the target folder where powershell will be placed and expand powershell to the target folder
 RUN mkdir -p ${POWERSHELL_INSTALL_FOLDER} && \
@@ -110,9 +110,9 @@ RUN apt-get update -qq && \
 COPY --from=downloader ["/opt/microsoft/powershell", "/opt/microsoft/powershell"]
 
 # Give all user execute permissions and remove write permissions for others
-RUN chmod a+x,o-w /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh && \
+RUN chmod a+x,o-w /opt/microsoft/powershell/${MAJOR_VERSION}/pwsh && \
     # Create the pwsh symbolic link that points to powershell
-    ln -s /opt/microsoft/powershell/${PWSH_INSTALL_VERSION}/pwsh /usr/bin/pwsh && \
+    ln -s /opt/microsoft/powershell/${MAJOR_VERSION}/pwsh /usr/bin/pwsh && \
     # Intialize powershell module cache
     # and disable telemetry
     export POWERSHELL_TELEMETRY_OPTOUT=1; \

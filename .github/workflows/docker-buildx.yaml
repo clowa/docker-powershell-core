@@ -28,7 +28,7 @@ jobs:
         id: pwsh_version
         run: |
           echo "version=$(cat version.txt | tr -d 'v')" >> $GITHUB_OUTPUT
-          echo "install_version=$(cat version.txt | tr -d 'v' | cut -d '.' -f 1)" >> $GITHUB_OUTPUT
+          echo "major_version=$(cat version.txt | tr -d 'v' | cut -d '.' -f 1)" >> $GITHUB_OUTPUT
 
       - name: Powershell version
         run: echo ${{ steps.pwsh_version.outputs.version }}
@@ -63,7 +63,7 @@ jobs:
             linux/arm/v7
           build-args: |
             PWSH_VERSION=${{ steps.pwsh_version.outputs.version }}
-            PWSH_INSTALL_VERSION=${{ steps.pwsh_version.outputs.install_version}}
+            MAJOR_VERSION=${{ steps.pwsh_version.outputs.major_version}}
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ steps.pwsh_version.outputs.version }}
