@@ -7,7 +7,7 @@ ARG MAJOR_VERSION
 ################
 ## Downloader ##
 ################
-FROM --platform=$BUILDPLATFORM ubuntu:22.04 as downloader
+FROM --platform=$BUILDPLATFORM ubuntu:22.04 AS downloader
 
 ARG PWSH_VERSION
 ARG TARGETOS
@@ -43,7 +43,7 @@ RUN mkdir -p ${POWERSHELL_INSTALL_FOLDER} && \
 ###########
 ## Final ##
 ###########
-FROM ubuntu:22.04 as final
+FROM ubuntu:22.04 AS final
 
 ENV TZ=Europe/Berlin
 ENV DEBIAN_FRONTEND=noninteractive

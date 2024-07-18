@@ -10,7 +10,9 @@ Supported platforms:
 
 - `linux/amd64`
 - `linux/arm64/v8`
-- `linux/arm/v7`
+
+> [!IMPORTANT]
+> Platform `linux/arm/v7` had to be removed due to the fact that QEMU has problems with the `pwsh` binary on this architecture.
 
 # Sources
 
