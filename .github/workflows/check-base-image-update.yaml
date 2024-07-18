@@ -22,7 +22,7 @@ jobs:
         with:
           base-image: ${{ env.base-image }}
           image: ${{ env.image }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64
         env:
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
 
