@@ -1,0 +1,16 @@
+# Just a stupid workflow to keep the repository alive and work around the 60 days inactivity limit
+name: Keep-Alive
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Ping
+        run: echo "Keep-Alive workflow run on $(date)"
