@@ -65,7 +65,9 @@ ENV \
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Set a fixed location for the Module analysis cache.
     # See: https://github.com/PowerShell/PowerShell-Docker/issues/103
-    PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache
+    PSModuleAnalysisCachePath=/var/cache/microsoft/powershell/PSModuleAnalysisCache/ModuleAnalysisCache \
+    # Disable powershell telemetry
+    POWERSHELL_TELEMETRY_OPTOUT=1
 
 # Set locale to en_US.UTF-8
 RUN apt-get update -qq && \
@@ -116,16 +118,13 @@ RUN chmod a+x,o-w /opt/microsoft/powershell/${MAJOR_VERSION}/pwsh && \
     # Intialize powershell module cache
     # and disable telemetry
     export POWERSHELL_TELEMETRY_OPTOUT=1; \
-    pwsh \
-        -NoLogo \
-        -NoProfile \
-        -Command " \
-          \$ErrorActionPreference = 'Stop' ; \
-          \$ProgressPreference = 'SilentlyContinue' ; \
-          while(!(Test-Path -Path \$env:PSModuleAnalysisCachePath)) {  \
-            Write-Host "'Waiting for $env:PSModuleAnalysisCachePath'" ; \
-            Start-Sleep -Seconds 6 ; \
-          }"
+    pwsh -NoLogo -NoProfile -Command ' \
+        \$ErrorActionPreference = "Stop"; \
+        \$ProgressPreference = "SilentlyContinue"; \
+        while(!(Test-Path -Path \$env:PSModuleAnalysisCachePath)) { \
+            Write-Host "Waiting for" \$env:PSModuleAnalysisCachePath; \
+            Start-Sleep -Seconds 6; \
+        }'
 
 # Set default shell of RUN command to powershell
 SHELL ["pwsh", "-command"]
