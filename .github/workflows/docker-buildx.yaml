@@ -21,6 +21,10 @@ env:
 jobs:
   docker-buildx:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      attestations: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -67,6 +71,14 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ steps.pwsh_version.outputs.version }}
+
+      - name: Generate artifact attestation
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.docker_build.outputs.digest }}
+          # push-to-registry: ${{ github.event_name != 'pull_request' }}
 
       - name: Send telegram notification
         if: github.ref == 'refs/heads/main'
