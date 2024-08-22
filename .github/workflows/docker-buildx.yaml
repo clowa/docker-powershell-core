@@ -62,6 +62,8 @@ jobs:
           context: .
           file: ./dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          provenance: mode=max
+          sbom: true
           cache-from: type=gha
           cache-to: type=gha,mode=max`
           platforms: |
