@@ -119,8 +119,8 @@ RUN chmod a+x,o-w /opt/microsoft/powershell/${MAJOR_VERSION}/pwsh && \
     # and disable telemetry
     export POWERSHELL_TELEMETRY_OPTOUT=1; \
     pwsh -NoLogo -NoProfile -Command ' \
-        \$ErrorActionPreference = "Stop"; \
-        \$ProgressPreference = "SilentlyContinue"; \
+        $ErrorActionPreference = "Stop"; \
+        $ProgressPreference = "SilentlyContinue"; \
         while(!(Test-Path -Path \$env:PSModuleAnalysisCachePath)) { \
             Write-Host "Waiting for" \$env:PSModuleAnalysisCachePath; \
             Start-Sleep -Seconds 6; \
