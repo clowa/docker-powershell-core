@@ -37,7 +37,7 @@ jobs:
 
       - if: steps.check.outputs.needs-updating == 'true'
         name: Send telegram notification
-        uses: appleboy/telegram-action@v1.0.0
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
