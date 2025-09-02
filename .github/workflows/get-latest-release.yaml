@@ -19,7 +19,7 @@ jobs:
             📚 Repository: [ ${{ github.repository }} ](https://github.com/${{ github.repository }})
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Have to use custom PAT, because commits created with GITHUB_TOKEN will not trigger CI
           # See: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
